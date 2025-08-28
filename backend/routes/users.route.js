@@ -3,7 +3,9 @@ const {
   getUserProfile,
   updateUserProfile,
   getUsersCount,
+  profilePhotoUploadCtrl,
 } = require("../controllers/users.controller");
+const { photoUpload } = require("../middlewares/photoUpload");
 const validateObjectId = require("../middlewares/validateObjectId");
 const {
   verifyTokenAndAdmin,
@@ -21,6 +23,9 @@ router
   .route("/profile/:id")
   .get(validateObjectId, getUserProfile)
   .put(validateObjectId, verifyTokenAndUser, updateUserProfile);
+
+
+router.post("/profile/profile-photo-upload", verifyToken,photoUpload.single("image"), profilePhotoUploadCtrl);
 
 // /api/users/count
 
