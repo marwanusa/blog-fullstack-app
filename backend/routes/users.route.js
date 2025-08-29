@@ -11,6 +11,7 @@ const {
   verifyTokenAndAdmin,
   verifyToken,
   verifyTokenAndUser,
+  verifyTokenAdminAndUser,
 } = require("../middlewares/verifyToken");
 
 const router = require("express").Router();
@@ -22,10 +23,15 @@ router.get("/profile", verifyTokenAndAdmin, getAllUsers); // or router.route("/p
 router
   .route("/profile/:id")
   .get(validateObjectId, getUserProfile)
-  .put(validateObjectId, verifyTokenAndUser, updateUserProfile);
+  .put(validateObjectId, verifyTokenAndUser, updateUserProfile)
+  .delete(validateObjectId, verifyTokenAdminAndUser, deleteUserProfileCtrl);
 
-
-router.post("/profile/profile-photo-upload", verifyToken,photoUpload.single("image"), profilePhotoUploadCtrl);
+router.post(
+  "/profile/profile-photo-upload",
+  verifyToken,
+  photoUpload.single("image"),
+  profilePhotoUploadCtrl
+);
 
 // /api/users/count
 

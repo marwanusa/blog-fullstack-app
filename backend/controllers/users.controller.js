@@ -125,10 +125,41 @@ const profilePhotoUploadCtrl = asyncHandler(async (req, res) => {
   fs.unlinkSync(imagePath)
 });
 
+/**-------------------------------------------
+ * @desc   Delete User Profile
+ * @route /api/users/profile/:id
+ * @method DELETE
+ * @access private (only admin or user himself)
+ -------------------------------------------*/
+
+const deleteUserProfileCtrl = asyncHandler(async (req,res)=>{
+  // 1. Get the user from DB
+  const user = await User.findById(req.params.id);
+  if(!user){
+    res.status(404).json({message:"user not found"});
+  }
+
+  // 2. Get All posts from DB ==TODO==
+  // 3. Get the public ids from the posts ==TODO==
+  // 4. Delete ALl posts image from cloud that belong to this user ==TODO==
+
+  // 5. Delete the profile picture from cloud
+  await cloudinaryRemoveImage(user.profilePhoto.publicId)
+
+  // 6. Delete user posts & comments ==TODO==
+
+  // 7. Delete the user himself
+  await User.findByIdAndDelete(req.params.id); 
+  user.save();
+
+  // 8. send a response to the client
+  res.status(200).json({message:"user has been deleted successfully"})
+})
 module.exports = {
   getAllUsers,
   getUserProfile,
   updateUserProfile,
   getUsersCount,
   profilePhotoUploadCtrl,
+  deleteUserProfileCtrl
 };
