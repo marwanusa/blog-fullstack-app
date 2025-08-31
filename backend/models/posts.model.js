@@ -1,3 +1,4 @@
+const Joi = require("joi");
 const mongoose = require("mongoose");
 
 const PostSchema = new mongoose.Schema(
@@ -46,9 +47,30 @@ const PostSchema = new mongoose.Schema(
 );
 
 // Post Model
-
 const Post = mongoose.model("Post", PostSchema);
 
+// Validate Create Post
+function validateCreatePost(obj) {
+  const schema = Joi.object({
+    title: Joi.string().trim().min(2).max(200).required(),
+    description: Joi.string().trim().min(10).required(),
+    category: Joi.string().trim().required(),
+  });
+  return schema.validate(obj);
+}
+
+// Validate Update Post
+function validateUpdatePost(obj) {
+  const schema = Joi.object({
+    title: Joi.string().trim().min(2).max(200),
+    description: Joi.string().trim().min(10),
+    category: Joi.string().trim(),
+  });
+  return schema.validate(obj);
+}
+
 module.exports = {
-    Post
+    Post,
+    validateCreatePost,
+    validateUpdatePost
 }

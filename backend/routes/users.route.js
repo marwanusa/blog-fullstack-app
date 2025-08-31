@@ -4,6 +4,7 @@ const {
   updateUserProfile,
   getUsersCount,
   profilePhotoUploadCtrl,
+  deleteUserProfileCtrl,
 } = require("../controllers/users.controller");
 const { photoUpload } = require("../middlewares/photoUpload");
 const validateObjectId = require("../middlewares/validateObjectId");
