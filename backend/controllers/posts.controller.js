@@ -1,5 +1,9 @@
 const asyncHandler = require("express-async-handler");
-const { validateCreatePost, Post } = require("../models/posts.model");
+const {
+  validateCreatePost,
+  Post,
+  validateUpdatePost,
+} = require("../models/posts.model");
 const {
   cloudinaryUploadImage,
   cloudinaryRemoveImage,
@@ -133,10 +137,106 @@ const deletePostCtrl = asyncHandler(async (req, res) => {
     res.status(403).json({ message: "access denied, forbidden" });
   }
 });
+
+/**-------------------------------------------
+ * @desc   Update Post
+ * @route /api/posts/:id
+ * @method PUT
+ * @access private (user himself)
+ -------------------------------------------*/
+const updatePostCtrl = asyncHandler(async (req, res) => {
+  // 1. validation
+  const { error } = validateUpdatePost(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+  // 2. get post from DB
+  const post = await Post.findById(req.params.id);
+  if (!post) {
+    return res.status(404).json({ message: "post not found" });
+  }
+
+  // 3. auth user
+  if (post.user.toString() !== req.user.id) {
+    return res
+      .status(403)
+      .json({ message: "access denied, you are not allowed" });
+  }
+  // 4. update post
+  const updatedPost = await Post.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: {
+        title: req.body.title,
+        description: req.body.description,
+        category: req.body.category,
+      },
+    },
+    {
+      new: true,
+    }
+  ).populate("user", ["-password"]);
+  return res.status(200).json(updatedPost);
+});
+
+/**-------------------------------------------
+ * @desc   Update Post Image
+ * @route /api/posts/upload-image/:id
+ * @method PUT
+ * @access private (user himself)
+ -------------------------------------------*/
+const updatePostImageCtrl = asyncHandler(async (req, res) => {
+  // 1. image Validation
+  if (!req.file) {
+    return res.status(400).json({ message: "no file provided" });
+  }
+
+  // 2. Get the post from DB
+  const post = await Post.findById(req.params.id);
+
+  // 3. auth user
+  if (post.user.toString() !== req.user.id) {
+    return res
+      .status(403)
+      .json({ message: "access denied, you are not allowed" });
+  }
+
+  // 4. Get the Path to the image
+  const imagePath = path.join(__dirname, `../images/${req.file.filename}`);
+
+  // 5. Upload to cloudinary
+  const result = await cloudinaryUploadImage(imagePath); // will return object contains info about the image i will need the public_id and secure_url
+
+  // 6. Delete the old  photo if exist
+  if (post.image.publicId !== null) {
+    await cloudinaryRemoveImage(post.image.publicId);
+  }
+  // 7. Change the photo field in the DB
+  const updatedPost = await Post.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: {
+        image: {
+          url: result.secure_url,
+          publicId: result.public_id,
+        },
+      },
+    },
+    { new: true }
+  );
+  // 8. Send response to client
+  res.status(200).json(updatedPost);
+
+  // 9. Remove image from the server
+  fs.unlinkSync(imagePath);
+});
+
 module.exports = {
   createPostCtrl,
   getAllPostsCtrl,
   getSinglePostCtrl,
   getPostsCount,
-  deletePostCtrl
+  deletePostCtrl,
+  updatePostCtrl,
+  updatePostImageCtrl,
 };
