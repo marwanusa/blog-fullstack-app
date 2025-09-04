@@ -231,6 +231,47 @@ const updatePostImageCtrl = asyncHandler(async (req, res) => {
   fs.unlinkSync(imagePath);
 });
 
+/**-------------------------------------------
+ * @desc   Toggle Like
+ * @route /api/posts/like/:id
+ * @method PUT
+ * @access private (logged in user)
+ -------------------------------------------*/
+const toggleLikeCtrl = asyncHandler(async (req, res) => {
+  const { id: postId } = req.params;
+  const loggedUser = req.user.id;
+  let post = await Post.findById(postId);
+  if (!post) {
+    return res.status(404).json({
+      message: "post not found",
+    });
+  }
+  const isPostAlreadyLiked = post.likes.find(
+    (user) => user.toString() === loggedUser
+  );
+  if (isPostAlreadyLiked) {
+    post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $pull: {
+          likes: loggedUser,
+        },
+      },
+      { new: true }
+    );
+  } else {
+    post = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $push: {
+          likes: loggedUser,
+        },
+      },
+      { new: true }
+    );
+  }
+  return res.status(200).json(post);
+});
 module.exports = {
   createPostCtrl,
   getAllPostsCtrl,
@@ -239,4 +280,5 @@ module.exports = {
   deletePostCtrl,
   updatePostCtrl,
   updatePostImageCtrl,
+  toggleLikeCtrl,
 };

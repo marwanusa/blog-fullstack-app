@@ -7,6 +7,7 @@ const {
   deletePostCtrl,
   updatePostCtrl,
   updatePostImageCtrl,
+  toggleLikeCtrl,
 } = require("../controllers/posts.controller");
 const { photoUpload } = require("../middlewares/photoUpload");
 const { verifyToken } = require("../middlewares/verifyToken");
@@ -24,11 +25,16 @@ router
   .route("/:id")
   .get(validateObjectId, getSinglePostCtrl)
   .delete(validateObjectId, verifyToken, deletePostCtrl)
-  .put(validateObjectId,verifyToken,updatePostCtrl)
-
+  .put(validateObjectId, verifyToken, updatePostCtrl);
+ 
 router
-      .route("/upload-image/:id")
-      .put(validateObjectId,verifyToken,photoUpload.single("image"),updatePostImageCtrl)
+  .route("/upload-image/:id")
+  .put(
+    validateObjectId,
+    verifyToken,
+    photoUpload.single("image"),
+    updatePostImageCtrl
+  );
 
-
+router.route("/like/:id").put(validateObjectId, verifyToken, toggleLikeCtrl);
 module.exports = router;

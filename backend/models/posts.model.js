@@ -46,6 +46,8 @@ const PostSchema = new mongoose.Schema(
   }
 );
 
+
+
 // Post Model
 const Post = mongoose.model("Post", PostSchema);
 
