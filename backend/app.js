@@ -15,6 +15,7 @@ app.use(express.json());
 app.use("/api/auth",require("./routes/auth.route"))
 app.use("/api/users",require("./routes/users.route"))
 app.use("/api/posts",require("./routes/posts.route"))
+app.use("/api/comments",require("./routes/comments.route"))
 
 // Running the server
 const PORT = process.env.PORT || 8000;
