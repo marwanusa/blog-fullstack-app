@@ -1,9 +1,11 @@
 const path = require("path");
 const asyncHandler = require("express-async-handler");
 const { User, validateUpdateUser } = require("../models/users.model");
+const { Post } = require("../models/posts.model");
 const {
   cloudinaryUploadImage,
   cloudinaryRemoveImage,
+  cloudinaryRemoveMultipleImage,
 } = require("../utils/cloudinary");
 const fs = require("fs");
 
@@ -114,15 +116,13 @@ const profilePhotoUploadCtrl = asyncHandler(async (req, res) => {
   };
   await user.save();
   // 7. Send response to client
-  res
-    .status(200)
-    .json({
-      message: "your profile photo uploaded successfuly",
-      profilePhoto: { url: result.secure_url, publicId: result.public_id },
-    });
+  res.status(200).json({
+    message: "your profile photo uploaded successfuly",
+    profilePhoto: { url: result.secure_url, publicId: result.public_id },
+  });
 
   // 8. Remove image from the server
-  fs.unlinkSync(imagePath)
+  fs.unlinkSync(imagePath);
 });
 
 /**-------------------------------------------
@@ -132,34 +132,39 @@ const profilePhotoUploadCtrl = asyncHandler(async (req, res) => {
  * @access private (only admin or user himself)
  -------------------------------------------*/
 
-const deleteUserProfileCtrl = asyncHandler(async (req,res)=>{
+const deleteUserProfileCtrl = asyncHandler(async (req, res) => {
   // 1. Get the user from DB
   const user = await User.findById(req.params.id);
-  if(!user){
-    res.status(404).json({message:"user not found"});
+  if (!user) {
+    return res.status(404).json({ message: "user not found" });
   }
 
   // 2. Get All posts from DB ==TODO==
+  const posts = await Post.find({ user: req.params.id });
   // 3. Get the public ids from the posts ==TODO==
+  const publicIds = posts?.map((post) => post.image.publicId);
   // 4. Delete ALl posts image from cloud that belong to this user ==TODO==
-
+  if (publicIds?.length > 0) {
+    await cloudinaryRemoveMultipleImage(publicIds);
+  }
   // 5. Delete the profile picture from cloud
-  await cloudinaryRemoveImage(user.profilePhoto.publicId)
-
+  if (user.profilePhoto?.publicId) {
+    await cloudinaryRemoveImage(user.profilePhoto.publicId);
+  }
   // 6. Delete user posts & comments ==TODO==
-
+  await Post.deleteMany({ user: req.params.id });
+  await Comment.deleteMany({ user: req.params.id });
   // 7. Delete the user himself
-  await User.findByIdAndDelete(req.params.id); 
-  user.save();
+  await User.findByIdAndDelete(req.params.id);
 
   // 8. send a response to the client
-  res.status(200).json({message:"user has been deleted successfully"})
-})
+  res.status(200).json({ message: "user has been deleted successfully" });
+});
 module.exports = {
   getAllUsers,
   getUserProfile,
   updateUserProfile,
   getUsersCount,
   profilePhotoUploadCtrl,
-  deleteUserProfileCtrl
+  deleteUserProfileCtrl,
 };

@@ -95,7 +95,9 @@ const getAllPostsCtrl = asyncHandler(async (req, res) => {
 
 const getSinglePostCtrl = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const post = await Post.findById(id).populate("user", ["-password"]);
+  const post = await Post.findById(id)
+    .populate("user", ["-password"])
+    .populate("comments");
   if (!post) {
     return res.status(404).json({ message: "post not found" });
   }
@@ -128,7 +130,7 @@ const deletePostCtrl = asyncHandler(async (req, res) => {
   if (req.user.isAdmin || req.user.id === post.user._id.toString()) {
     await Post.findByIdAndDelete(req.params.id);
     await cloudinaryRemoveImage(post.image.publicId);
-    // ==TODO== Remove Post Comments
+    await Comment.deleteMany({ postId: post._id });
     res.status(200).json({
       message: "post has been deleted successfully",
       postId: post._id,

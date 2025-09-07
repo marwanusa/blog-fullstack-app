@@ -46,10 +46,16 @@ const PostSchema = new mongoose.Schema(
   }
 );
 
-
-
 // Post Model
 const Post = mongoose.model("Post", PostSchema);
+
+// Populate Comments That Belongs To This Post
+
+PostSchema.virtual("comments", {
+  ref: "Comment",
+  foreignField: "postId",
+  localField: "_id",
+});
 
 // Validate Create Post
 function validateCreatePost(obj) {
@@ -72,7 +78,7 @@ function validateUpdatePost(obj) {
 }
 
 module.exports = {
-    Post,
-    validateCreatePost,
-    validateUpdatePost
-}
+  Post,
+  validateCreatePost,
+  validateUpdatePost,
+};
