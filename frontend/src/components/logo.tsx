@@ -22,7 +22,7 @@ export default function Logo() {
       </svg>
 
       <span className="text-xl font-extrabold tracking-tight text-white mb-1">
-        <span className="text-black ">Verve</span>
+        <span className="text-black text-xl font-semibold">Verve</span>
       </span>
     </div>
   );
