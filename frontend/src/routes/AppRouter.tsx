@@ -1,9 +1,12 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import Lottie from "lottie-react";
-import Error404 from "../lotties/404 error.json";
 import UnexpectedError from "../lotties/error.json";
 import Home from "../pages/Home/Home";
+import PostDetails from "@/pages/PostDetails/PostDetails";
+import Signin from "@/pages/Signin/Signin";
+import Signup from "@/pages/Signup/Signup";
+import AuthLayout from "@/layouts/AuthLayout";
 
 const router = createBrowserRouter([
   {
@@ -22,17 +25,23 @@ const router = createBrowserRouter([
         index: true,
         element: <Home />,
       },
-    //   {
-    //     path: "post/:id",
-    //     element: <SearchResults />,
-    //   },
       {
-        path: "*",
-        element: (
-          <div className="flex h-[full] justify-center items-center">
-            <Lottie animationData={Error404} loop={true} />
-          </div>
-        ),
+        path: "post/:id",
+        element: <PostDetails />,
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login",
+        element: <Signin />,
+      },
+      {
+        path: "register",
+        element: <Signup />,
       },
     ],
   },

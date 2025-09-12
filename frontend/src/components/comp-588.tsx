@@ -20,6 +20,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Link } from "react-router-dom";
 
 // Navigation links array
 export default function Navbar({registerd,admin}) {
@@ -103,7 +104,7 @@ export default function Navbar({registerd,admin}) {
                           size="sm"
                           className="text-sm w-full"
                         >
-                          <a href="#">Sign In</a>
+                          <Link to={"/login"}>Sign In</Link>
                         </Button>
                       </NavigationMenuItem>
                       <NavigationMenuItem className="w-full">
@@ -113,7 +114,7 @@ export default function Navbar({registerd,admin}) {
                           size="sm"
                           className="text-sm w-full bg-black text-white hover:bg-black hover:text-white"
                         >
-                          <a href="#">Get Started</a>
+                          <Link to="/register">Get Started</Link>
                         </Button>
                       </NavigationMenuItem>
                     </>
@@ -176,10 +177,10 @@ export default function Navbar({registerd,admin}) {
                 size="sm"
                 className="text-sm hidden md:flex"
               >
-                <a href="#">Sign In</a>
+                <Link to="/login">Sign In</Link>
               </Button>
               <Button asChild size="sm" className="text-sm hidden md:flex">
-                <a href="#">Get Started</a>
+                <Link to="/register">Get Started</Link>
               </Button>
             </div>
           )}

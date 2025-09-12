@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Eclipse, XIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   const [isVisible, setIsVisible] = useState(true);
@@ -23,12 +24,16 @@ export default function Header() {
               community.
             </p>
             <div className="flex gap-2 max-md:flex-wrap">
+              <Link to={"/register"}>
               <Button size="sm" className="text-sm">
                 Get Started
               </Button>
+              </Link>
+                <Link to={"/login"}>
               <Button variant="link" size="sm" className="text-sm">
                 Sign In
               </Button>
+                </Link>
             </div>
           </div>
         </div>
