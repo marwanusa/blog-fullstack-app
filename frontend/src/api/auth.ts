@@ -1,15 +1,7 @@
 import { apiRequest } from "@/api/api.ts";
+import type { handelLoginProps, handelRegisterProps } from "@/types/FormType";
 
-type handelRegisterProps = {
-  username: string;
-  email: string;
-  password: string;
-};
 
-type handelLoginProps = {
-  email: string;
-  password: string;
-};
 export const handelRegister = async (data: handelRegisterProps) => {
   const res = await apiRequest.post("/auth/register", data);
   return res.data;

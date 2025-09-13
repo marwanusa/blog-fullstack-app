@@ -19,10 +19,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import useAuth from "@/hooks/useAuth";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { Link } from "react-router-dom";
 
 export default function UserMenu() {
   const { user, logout } = useAuth();
-  const { data, isLoading } = useUserProfile(user._id);
+  const { data, isLoading } = useUserProfile(user?._id);
 
   function logoutHandle() {
     logout();
@@ -58,11 +59,12 @@ export default function UserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+            <Link to={`/profile/${user?._id}`}>
+          <DropdownMenuItem className="cursor-pointer">
             <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
-
             <span>Profile</span>
           </DropdownMenuItem>
+            </Link>
           <DropdownMenuItem>
             <Layers2Icon size={16} className="opacity-60" aria-hidden="true" />
             <span>Option 2</span>

@@ -8,6 +8,7 @@ import Signin from "@/pages/Signin/Signin";
 import Signup from "@/pages/Signup/Signup";
 import AuthLayout from "@/layouts/AuthLayout";
 import ProtectedRoute from "./ProtectedRoute";
+import ProfilePage from "@/pages/Profile/ProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -27,8 +28,16 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "post/:id",
+        path: "/post/:id",
         element: <PostDetails />,
+      },
+      {
+        path: "/profile/:id",
+        element: (
+          <ProtectedRoute requireAuth={true}>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
@@ -39,7 +48,7 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute requireAuth={false}>
             <Signin />
           </ProtectedRoute>
         ),
