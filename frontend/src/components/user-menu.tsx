@@ -1,18 +1,13 @@
 import {
-  BoltIcon,
   BookOpenIcon,
   Layers2Icon,
   LogOutIcon,
   PinIcon,
   UserPenIcon,
-} from "lucide-react"
+} from "lucide-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,33 +16,52 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import useAuth from "@/hooks/useAuth";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 export default function UserMenu() {
+  const { user, logout } = useAuth();
+  const { data, isLoading } = useUserProfile(user._id);
+
+  function logoutHandle() {
+    logout();
+  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-auto p-0 hover:bg-transparent cursor-pointer">
+        <Button
+          variant="ghost"
+          className="h-auto p-0 hover:bg-transparent cursor-pointer"
+        >
           <Avatar>
-            <AvatarImage src="./avatar.jpg" alt="Profile image" />
-            <AvatarFallback>KK</AvatarFallback>
+            <AvatarImage
+              src={data?.profilePhoto?.url || "./avatar.jpg"}
+              alt="Profile image"
+            />
+            <AvatarFallback>
+              {isLoading
+                ? "..."
+                : data?.username?.charAt(0).toUpperCase() || "U"}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="max-w-64" align="end">
         <DropdownMenuLabel className="flex min-w-0 flex-col">
           <span className="text-foreground truncate text-sm font-medium">
-            Keith Kennedy
+            {data?.username}
           </span>
           <span className="text-muted-foreground truncate text-xs font-normal">
-            k.kennedy@originui.com
+            {data?.email}
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <BoltIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 1</span>
+            <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
+
+            <span>Profile</span>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Layers2Icon size={16} className="opacity-60" aria-hidden="true" />
@@ -72,9 +86,9 @@ export default function UserMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
-          <span>Logout</span>
+          <span onClick={logoutHandle}>Logout</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

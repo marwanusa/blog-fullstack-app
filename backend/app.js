@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const connectToDB = require("./config/connectToDB");
 const { notFound, errorHandler } = require("./middlewares/error");
-
+const cors = require("cors")
 // Connect to DP
 connectToDB();
 
@@ -10,6 +10,7 @@ connectToDB();
 const app = express();
 
 // Middlewares
+app.use(cors())
 app.use(express.json());
 
 // Routes

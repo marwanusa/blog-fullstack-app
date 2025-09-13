@@ -3,9 +3,8 @@ import {
   PlusIcon,
   SparklesIcon,
   LayoutDashboard,
-  Newspaper
+  Newspaper,
 } from "lucide-react";
-
 import Logo from "@/components/logo";
 import UserMenu from "@/components/user-menu";
 import { Button } from "@/components/ui/button";
@@ -21,16 +20,23 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Link } from "react-router-dom";
+import useAuth from "@/hooks/useAuth";
 
 // Navigation links array
-export default function Navbar({registerd,admin}) {
-
+export default function Navbar() {
+  const { user } = useAuth();
+  const registerd = !!user;
+  const admin = user?.isAdmin;
 
   const navigationLinks = [
     { href: "/", label: "Home", icon: HouseIcon, active: true },
     { href: "/posts", label: "Posts", icon: Newspaper },
     admin
-      ? { href: "/admin-dashboard", label: "Admin Dashboard", icon: LayoutDashboard }
+      ? {
+          href: "/admin-dashboard",
+          label: "Admin Dashboard",
+          icon: LayoutDashboard,
+        }
       : null,
   ].filter(Boolean);
   return (

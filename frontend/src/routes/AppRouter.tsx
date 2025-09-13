@@ -7,6 +7,7 @@ import PostDetails from "@/pages/PostDetails/PostDetails";
 import Signin from "@/pages/Signin/Signin";
 import Signup from "@/pages/Signup/Signup";
 import AuthLayout from "@/layouts/AuthLayout";
+import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -37,7 +38,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "login",
-        element: <Signin />,
+        element: (
+          <ProtectedRoute>
+            <Signin />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "register",

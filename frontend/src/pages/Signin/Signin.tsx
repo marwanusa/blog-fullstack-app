@@ -2,6 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+
 import {
   Form,
   FormControl,
@@ -11,10 +13,14 @@ import {
 } from "@/components/ui/form";
 import UserInput from "@/components/comp-32";
 import GoogleSignin from "@/components/comp-122";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormSchema from "@/validation/LoginSchema";
+import { handelLogin } from "@/api/auth";
+import useAuth from "@/hooks/useAuth";
 
 const Signin = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -23,10 +29,26 @@ const Signin = () => {
     },
   });
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
+    mutation.mutate(data);
   }
+  const mutation = useMutation({
+    mutationFn: handelLogin,
+    onSuccess: (data) => {
+      login(data);
+      navigate("/");
+    },
+    onError: (error: any) => {
+      console.error(" Login failed:", error.response?.data || error.message);
+    },
+  });
+
   return (
     <>
+      {mutation.isError && (
+        <p className="text-red-500">
+          {mutation.error?.response?.data?.message || mutation.error.message}
+        </p>
+      )}
       <h1 className="text-[#232323] font-bold text-3xl">Sign in</h1>
       <p>Please login to continue to your account.</p>
       <Form {...form}>
@@ -80,8 +102,9 @@ const Signin = () => {
           <Button
             type="submit"
             className="w-[100%] sm:w-[440px] md:w-[440px] lg:w-[285px] xl:w-[400px] cursor-pointer"
+            disabled={mutation.isPending}
           >
-            Sign in
+            {mutation.isPending ? "Loading..." : "Sign In"}
           </Button>
           <GoogleSignin />
 
