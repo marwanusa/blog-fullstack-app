@@ -1,11 +1,12 @@
 import { apiRequest } from "@/api/api";
+import type { IUser } from "@/types/UserType";
 import { useQuery } from "@tanstack/react-query";
 
 const getUserProfile = async (userId: string | undefined) => {
   if (!userId) {
     throw new Error("Enter A Valid userId");
   }
-  const res = await apiRequest.get(`/users/profile/${userId}`);
+  const res = await apiRequest.get<IUser>(`/users/profile/${userId}`);
   return res.data;
 };
 

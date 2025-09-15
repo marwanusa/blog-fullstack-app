@@ -156,17 +156,17 @@ export default function Navbar() {
           {/* Mobile Logo */}
 
           <div className="flex items-center md:hidden">
-            <a href="#" className="text-primary hover:text-primary/90">
+            <Link to={"/"} className="text-primary hover:text-primary/90">
               <Logo />
-            </a>
+            </Link>
           </div>
         </div>
 
         {/* Middle side: Logo */}
         <div className="hidden items-center md:flex">
-          <a href="#" className="text-primary hover:text-primary/90">
+            <Link to={"/"} className="text-primary hover:text-primary/90">
             <Logo />
-          </a>
+            </Link>
         </div>
 
         {/* Right side: Actions */}

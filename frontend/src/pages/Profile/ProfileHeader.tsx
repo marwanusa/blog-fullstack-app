@@ -1,7 +1,16 @@
-import { Button } from "@/components/ui/button";
+import EditProfileDialog from "@/components/EditProfileDialog";
 import type { IUser } from "@/types/UserType";
 
-function ProfileHeader({ user, isOwner }: { user: IUser; isOwner: boolean }) {
+function ProfileHeader({
+  user,
+  isOwner,
+}: {
+  user: IUser | undefined;
+  isOwner: boolean;
+}) {
+  if (!user) {
+    throw new Error("UnExpexted Error");
+  }
   return (
     <div className="flex flex-col items-center space-y-3 py-6">
       <img
@@ -14,7 +23,7 @@ function ProfileHeader({ user, isOwner }: { user: IUser; isOwner: boolean }) {
       <p className="text-sm text-gray-500">
         Joined: {new Date(user.createdAt).toLocaleDateString()}
       </p>
-      {isOwner && (<Button variant="default">Update Profile</Button>)}
+      {isOwner && <EditProfileDialog user={user} />}
     </div>
   );
 }

@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
-import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -14,8 +13,7 @@ import UserInput from "@/components/comp-32";
 import { Link } from "react-router-dom";
 import PasswordInput from "@/components/comp-51";
 import RegisterFormSchema from "@/validation/RegisterSchema";
-import { useMutation } from "@tanstack/react-query";
-import { handelRegister } from "@/api/auth";
+import { useRegister } from "@/hooks/useRegister";
 
 const Signup = () => {
   const form = useForm<z.infer<typeof RegisterFormSchema>>({
@@ -26,34 +24,20 @@ const Signup = () => {
       password: "",
     },
   });
+  const registerMutation = useRegister();
 
   function onSubmit(data: z.infer<typeof RegisterFormSchema>) {
-    mutation.mutate(data);
+    registerMutation.mutate(data);
   }
-  const mutation = useMutation({
-    mutationFn: handelRegister,
-    onSuccess: (data) => {
-      console.log("Register success:", data);
-      toast.success(data.message || "Registered successfully!",{
-        duration:1000,
-      });
-    },
-    onError: (error: any) => {
-      console.error(" Register failed:", error.response?.data || error.message);
-      toast.error(error.response?.data?.message || error.message,{
-        duration:1000,
-        dismissible:false
-      });
-    },
-  });
+
   return (
     <>
-              {mutation.isError && (
-            <p className="text-red-500">
-              {mutation.error?.response?.data?.message ||
-                mutation.error.message}
-            </p>
-          )}
+      {registerMutation.isError && (
+        <p className="text-red-500">
+          {registerMutation.error?.response?.data?.message ||
+            registerMutation.error.message}
+        </p>
+      )}
       <h1 className="text-[#232323] font-bold text-3xl">Sign Up </h1>
       <p>Sign up to enjoy the feature of Revolutie</p>
       <Form {...form}>
@@ -110,8 +94,12 @@ const Signup = () => {
             )}
           />
 
-          <Button type="submit" disabled={mutation.isPending} className="w-[100%] sm:w-[440px] md:w-[440px] lg:w-[285px] xl:w-[400px] cursor-pointer">
-            {mutation.isPending ? "Loading..." : "Register"}
+          <Button
+            type="submit"
+            disabled={registerMutation.isPending}
+            className="w-[100%] sm:w-[440px] md:w-[440px] lg:w-[285px] xl:w-[400px] cursor-pointer"
+          >
+            {registerMutation.isPending ? "Loading..." : "Register"}
           </Button>
           <p className="text-[#6C6C6C] text-sm">
             Already have an account?{" "}
@@ -119,7 +107,6 @@ const Signup = () => {
               Sign in
             </Link>
           </p>
-
         </form>
       </Form>
     </>

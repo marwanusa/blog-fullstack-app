@@ -2,7 +2,7 @@ import type { IUser } from "./UserType";
 
 export interface IPost {
   _id: string;
-  user: IUser;
+  user: IUser | string;
   title: string;
   description: string;
   category: string;
@@ -15,3 +15,4 @@ export interface IPost {
   updatedAt: string;
   id: string;
 }
+

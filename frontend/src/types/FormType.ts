@@ -9,3 +9,9 @@ export type handelLoginProps = {
   password: string;
 };
 
+export type handelCreatePostProps = {
+  title: string;
+  description: string;
+  category:string;
+  image:File;
+};
