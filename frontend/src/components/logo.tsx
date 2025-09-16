@@ -20,10 +20,11 @@ export default function Logo() {
         <path d="M6 12h2" />
         <path d="M6 8h2" />
       </svg>
-
-      <span className="text-xl font-extrabold tracking-tight text-white mb-1">
-        <span className="text-black text-xl font-semibold">Verve</span>
-      </span>
+      <div className="flex  justify-center items-center">
+        <span className="text-xl font-extrabold tracking-tight text-white mb-1">
+          <span className="text-black text-xl font-semibold">Verve</span>
+        </span>
+      </div>
     </div>
   );
 }

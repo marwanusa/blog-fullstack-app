@@ -52,7 +52,10 @@ export default function ProfilePage() {
       {/* Create Post Button */}
       {isOwner && (
         <div className="flex justify-between items-center py-4">
-          <CreatePost/>
+          <CreatePost>
+            <Button variant="outline">Create Post</Button>
+          </CreatePost>
+
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive">Delete Account</Button>

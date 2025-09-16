@@ -62,7 +62,8 @@ const createPostCtrl = asyncHandler(async (req, res) => {
  -------------------------------------------*/
 
 const getAllPostsCtrl = asyncHandler(async (req, res) => {
-  const { pageNumber, category } = req.query;
+  let { pageNumber, category } = req.query;
+  category = category?.toLowerCase();
   const POST_PER_PAGE = 3;
   let posts;
   if (pageNumber && !category) {

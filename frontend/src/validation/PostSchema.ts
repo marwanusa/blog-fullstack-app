@@ -13,13 +13,20 @@ const PostSchema = z.object({
   category: z.string().trim(),
 
   image: z
-    .instanceof(File, { message: "Image is required." }) 
-    .refine((file) => file.size <= 1 * 1024 * 1024, {
-      message: "Image size must be less than 1MB",
+    .any()
+    .refine((files) => files instanceof FileList && files.length > 0, {
+      message: "Image is required.",
     })
-    .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
-      message: "Only .jpg and .png formats are supported.",
-    }),
+    .refine(
+      (files) => files instanceof FileList && files[0].size <= 1 * 1024 * 1024,
+      { message: "Image size must be less than 1MB" }
+    )
+    .refine(
+      (files) =>
+        files instanceof FileList &&
+        ["image/jpeg", "image/png"].includes(files[0].type),
+      { message: "Only .jpg and .png formats are supported." }
+    ),
 });
 
 export default PostSchema;

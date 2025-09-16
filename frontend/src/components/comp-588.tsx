@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/popover";
 import { Link } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
+import { CreatePost } from "./CreatePostDialog";
 
 // Navigation links array
 export default function Navbar() {
@@ -164,9 +165,9 @@ export default function Navbar() {
 
         {/* Middle side: Logo */}
         <div className="hidden items-center md:flex">
-            <Link to={"/"} className="text-primary hover:text-primary/90">
+          <Link to={"/"} className="text-primary hover:text-primary/90">
             <Logo />
-            </Link>
+          </Link>
         </div>
 
         {/* Right side: Actions */}
@@ -193,17 +194,19 @@ export default function Navbar() {
 
           {/* Create Post button */}
           {registerd && (
-            <Button
-              size="sm"
-              className="text-sm max-sm:aspect-square max-sm:p-0 bg-gray-100 text-black cursor-pointer hover:bg-gray-200 active:bg-gray-300 transition-all"
-            >
-              <PlusIcon
-                className="opacity-60 sm:-ms-1"
-                size={16}
-                aria-hidden="true"
-              />
-              <span className="max-sm:sr-only">Post</span>
-            </Button>
+            <CreatePost>
+              <Button
+                size="sm"
+                className="text-sm max-sm:aspect-square max-sm:p-0 bg-gray-100 text-black cursor-pointer hover:bg-gray-200 active:bg-gray-300 transition-all"
+              >
+                <PlusIcon
+                  className="opacity-60 sm:-ms-1"
+                  size={16}
+                  aria-hidden="true"
+                />
+                <span className="max-sm:sr-only">Post</span>
+              </Button>
+            </CreatePost>
           )}
 
           {/* Upgrade button */}

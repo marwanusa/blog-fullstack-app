@@ -9,6 +9,7 @@ import Signup from "@/pages/Signup/Signup";
 import AuthLayout from "@/layouts/AuthLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import ProfilePage from "@/pages/Profile/ProfilePage";
+import Posts from "@/pages/Posts/Posts";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/post/:id",
         element: <PostDetails />,
+      },
+            {
+        path: "/posts",
+        element: <Posts />,
       },
       {
         path: "/profile/:id",
